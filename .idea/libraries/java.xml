@@ -2,9 +2,14 @@
   <library name="java">
     <CLASSES>
       <root url="file:///usr/share/java" />
+      <root url="file:///usr/share/openjfx/lib" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file:///usr/share/openjfx/lib" />
+    </SOURCES>
     <jarDirectory url="file:///usr/share/java" recursive="false" />
+    <jarDirectory url="file:///usr/share/openjfx/lib" recursive="false" />
+    <jarDirectory url="file:///usr/share/openjfx/lib" recursive="false" type="SOURCES" />
   </library>
 </component>

@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MedicineService {
 
@@ -39,9 +41,10 @@ public class MedicineService {
         }
     }
 
-    public void viewMedicines() {
+    public List<Medicine> viewMedicines() {
 
         String sql = "SELECT * FROM medicine";
+        List<Medicine> medicines = new ArrayList<>();
 
         try (
                 Connection conn = DatabaseConnection.getConnection();
@@ -51,20 +54,24 @@ public class MedicineService {
 
             while (rs.next()) {
 
-                System.out.println("----------------------------");
-                System.out.println("ID: " + rs.getInt("medicine_id"));
-                System.out.println("Name: " + rs.getString("medicine_name"));
-                System.out.println("Manufacturer: " + rs.getString("manufacturer"));
-                System.out.println("Category: " + rs.getString("category"));
-                System.out.println("Batch No: " + rs.getString("batch_no"));
-                System.out.println("Expiry Date: " + rs.getDate("expiry_date"));
-                System.out.println("Quantity: " + rs.getInt("quantity"));
-                System.out.println("Price: " + rs.getDouble("price"));
+                Medicine medicine = new Medicine(
+                        rs.getString("medicine_name"),
+                        rs.getString("manufacturer"),
+                        rs.getString("category"),
+                        rs.getString("batch_no"),
+                        rs.getString("expiry_date"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price")
+                );
+
+                medicines.add(medicine);
+
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return medicines;
     }
 
 
