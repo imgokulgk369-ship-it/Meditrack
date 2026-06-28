@@ -63,6 +63,7 @@ public class MedicineService {
                         rs.getInt("quantity"),
                         rs.getDouble("price")
                 );
+                        medicine.setMedicineId(rs.getInt("medicine_id"));
 
                 medicines.add(medicine);
 
@@ -74,26 +75,70 @@ public class MedicineService {
         return medicines;
     }
 
+    public List<Medicine> searchMedicines(String keyword) {
 
-    public void updateMedicine(int medicineId, double newPrice, int newQuantity) {
+        List<Medicine> medicines = new ArrayList<>();
 
-        String sql = "UPDATE medicine SET price = ?, quantity = ? WHERE medicine_id = ?";
+        String sql = "SELECT * FROM medicine WHERE medicine_name LIKE ?";
 
         try (
                 Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)
         ) {
 
-            pstmt.setDouble(1, newPrice);
-            pstmt.setInt(2, newQuantity);
-            pstmt.setInt(3, medicineId);
+            pstmt.setString(1, "%" + keyword + "%");
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+
+                Medicine medicine = new Medicine(
+                        rs.getString("medicine_name"),
+                        rs.getString("manufacturer"),
+                        rs.getString("category"),
+                        rs.getString("batch_no"),
+                        rs.getString("expiry_date"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price")
+                );
+
+                medicine.setMedicineId(rs.getInt("medicine_id"));
+
+                medicines.add(medicine);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return medicines;
+    }
+
+
+    public void updateMedicine(Medicine medicine) {
+
+        String sql = "UPDATE medicine SET medicine_name = ?, manufacturer = ?, category = ?, batch_no = ?, expiry_date = ?, quantity = ?, price = ? WHERE medicine_id = ?";
+
+        try (
+                Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)
+        ) {
+
+            pstmt.setString(1, medicine.getMedicineName());
+            pstmt.setString(2, medicine.getManufacturer());
+            pstmt.setString(3, medicine.getCategory());
+            pstmt.setString(4, medicine.getBatchNo());
+            pstmt.setDate(5, java.sql.Date.valueOf(medicine.getExpiryDate()));
+            pstmt.setInt(6, medicine.getQuantity());
+            pstmt.setDouble(7, medicine.getPrice());
+            pstmt.setInt(8, medicine.getMedicineId());
 
             int rows = pstmt.executeUpdate();
 
             if (rows > 0) {
                 System.out.println("Medicine updated successfully!");
             } else {
-                System.out.println("Medicine ID not found.");
+                System.out.println("Medicine not found.");
             }
 
         } catch (SQLException e) {

@@ -26,8 +26,9 @@ public class Dashboard {
         });
 
         Button updateBtn = new Button("Update Medicine");
+
         updateBtn.setOnAction(e -> {
-            service.updateMedicine(1, 25.50, 200);
+            new ViewMedicineScreen().show();
         });
 
         Button deleteBtn = new Button("Delete Medicine");
