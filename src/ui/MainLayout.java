@@ -10,6 +10,9 @@ import javafx.stage.Stage;
 public class MainLayout extends Stage {
 
     private BorderPane root = new BorderPane();
+    public BorderPane getRoot() {
+        return root;
+    }
 
     public MainLayout() {
 

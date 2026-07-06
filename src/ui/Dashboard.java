@@ -14,6 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import service.MedicineService;
+
 
 public class Dashboard {
 
@@ -50,10 +52,23 @@ public class Dashboard {
         subtitle.setTextFill(Color.web("#37474F"));
 
         // Dashboard Cards
-        Label medicineCount = new Label("💊 Medicines\n0");
-        Label lowStock = new Label("⚠ Low Stock\n0");
-        Label supplierCount = new Label("📦 Suppliers\n0");
-        Label expiryCount = new Label("⏰ Expiring\n0");
+        MedicineService service = new MedicineService();
+
+        Label medicineCount = new Label(
+                "💊 Medicines\n" + service.getMedicineCount()
+        );
+
+        Label lowStock = new Label(
+                "⚠ Low Stock\n" + service.getLowStockCount()
+        );
+
+        Label supplierCount = new Label(
+                "📦 Suppliers\nComing Soon"
+        );
+
+        Label expiryCount = new Label(
+                "⏰ Expiring\n" + service.getExpiringCount()
+        );
 
         String cardStyle =
                 "-fx-background-color:white;" +

@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.control.Alert;
 
 public class MedicineService {
 
@@ -34,7 +35,11 @@ public class MedicineService {
 
             pstmt.executeUpdate();
 
-            System.out.println("Medicine added successfully!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
+            alert.setContentText("Medicine added successfully!");
+            alert.showAndWait();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -136,9 +141,17 @@ public class MedicineService {
             int rows = pstmt.executeUpdate();
 
             if (rows > 0) {
-                System.out.println("Medicine updated successfully!");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Medicine updated successfully!");
+                alert.showAndWait();
             } else {
-                System.out.println("Medicine not found.");
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Medicine not found.");
+                alert.showAndWait();
             }
 
         } catch (SQLException e) {
@@ -159,13 +172,84 @@ public class MedicineService {
             int rows = pstmt.executeUpdate();
 
             if (rows > 0) {
-                System.out.println("Medicine deleted successfully!");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Medicine deleted successfully!");
+                alert.showAndWait();
             } else {
-                System.out.println("Medicine ID not found.");
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Medicine ID not found.");
+                alert.showAndWait();
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getMedicineCount() {
+
+        String sql = "SELECT COUNT(*) FROM medicine";
+
+        try (
+                Connection conn = DatabaseConnection.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)
+        ) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public int getLowStockCount() {
+
+        String sql = "SELECT COUNT(*) FROM medicine WHERE quantity < 10";
+
+        try (
+                Connection conn = DatabaseConnection.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)
+        ) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public int getExpiringCount() {
+
+        String sql = "SELECT COUNT(*) FROM medicine WHERE expiry_date <= CURRENT_DATE + INTERVAL '30 days'";
+
+        try (
+                Connection conn = DatabaseConnection.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)
+        ) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 }

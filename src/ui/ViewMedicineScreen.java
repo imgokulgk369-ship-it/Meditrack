@@ -15,6 +15,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Medicine;
 import service.MedicineService;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 public class ViewMedicineScreen extends Stage {
 
@@ -111,15 +113,18 @@ public class ViewMedicineScreen extends Stage {
 
             if (selectedMedicine != null) {
 
-                System.out.println("Selected ID = " + selectedMedicine.getMedicineId());
+                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                confirm.setTitle("Delete Medicine");
+                confirm.setHeaderText(null);
+                confirm.setContentText("Are you sure you want to delete this medicine?");
 
-                System.out.println("Selected Medicine ID = " + selectedMedicine.getMedicineId());
+                if (confirm.showAndWait().get() == ButtonType.OK) {
 
-                service.deleteMedicine(selectedMedicine.getMedicineId());
+                    service.deleteMedicine(selectedMedicine.getMedicineId());
 
-                table.getItems().remove(selectedMedicine);
+                    table.setItems(FXCollections.observableArrayList(service.viewMedicines()));
 
-                System.out.println("Medicine Deleted Successfully!");
+                }
             }
 
         });
