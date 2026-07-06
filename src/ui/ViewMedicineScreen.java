@@ -82,8 +82,24 @@ public class ViewMedicineScreen extends Stage {
 
         });
 
-        Button updateButton = new Button("Update");
-        Button deleteButton = new Button("Delete");
+        Button updateButton = new Button("✔ UPDATE");
+        Button deleteButton = new Button("🗑 DELETE");
+
+        updateButton.setStyle(
+                "-fx-background-color:#2E7D32;" +
+                        "-fx-text-fill:white;" +
+                        "-fx-font-size:14;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-background-radius:8;"
+        );
+
+        deleteButton.setStyle(
+                "-fx-background-color:#D32F2F;" +
+                        "-fx-text-fill:white;" +
+                        "-fx-font-size:14;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-background-radius:8;"
+        );
 
         updateButton.setOnAction(e -> {
 
@@ -129,8 +145,16 @@ public class ViewMedicineScreen extends Stage {
 
         });
 
+        Label formTitle = new Label("MEDICINE DETAILS");
+        formTitle.setStyle(
+                "-fx-font-size:18;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-text-fill:#1565C0;"
+        );
+
         VBox form = new VBox(
                 10,
+                formTitle,
                 new Label("Name"), nameField,
                 new Label("Manufacturer"), manufacturerField,
                 new Label("Category"), categoryField,
@@ -147,7 +171,15 @@ public class ViewMedicineScreen extends Stage {
         TextField searchField = new TextField();
         searchField.setPromptText("Search Medicine");
 
-        Button searchButton = new Button("Search");
+        Button searchButton = new Button("🔍 SEARCH");
+
+        searchButton.setStyle(
+                "-fx-background-color:#1976D2;" +
+                        "-fx-text-fill:white;" +
+                        "-fx-font-size:14;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-background-radius:8;"
+        );
 
         searchButton.setOnAction(e -> {
 
@@ -156,8 +188,35 @@ public class ViewMedicineScreen extends Stage {
             ));
 
         });
+        Button addButton = new Button("➕ ADD MEDICINE");
 
-        HBox searchBox = new HBox(10, searchField, searchButton);
+        addButton.setStyle(
+                "-fx-background-color:#1976D2;" +
+                        "-fx-text-fill:white;" +
+                        "-fx-font-size:14;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-background-radius:8;"
+        );
+
+        addButton.setOnAction(e -> {
+            new AddMedicineScreen().show();
+        });
+        Button refreshButton = new Button("🔄 REFRESH");
+
+        refreshButton.setStyle(
+                "-fx-background-color:#FF9800;" +
+                        "-fx-text-fill:white;" +
+                        "-fx-font-size:14;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-background-radius:8;"
+        );
+
+        refreshButton.setOnAction(e -> {
+            table.setItems(FXCollections.observableArrayList(service.viewMedicines()));
+            searchField.clear();
+        });
+
+        HBox searchBox = new HBox(10, addButton, searchField, searchButton, refreshButton);
         searchBox.setPadding(new Insets(10));
         BorderPane root = new BorderPane();
 

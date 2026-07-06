@@ -15,6 +15,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import service.MedicineService;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class Dashboard {
@@ -51,6 +58,25 @@ public class Dashboard {
         subtitle.setFont(Font.font("Arial", FontWeight.BOLD, 22));
         subtitle.setTextFill(Color.web("#37474F"));
 
+        Label clockLabel = new Label();
+
+        clockLabel.setStyle(
+                "-fx-font-size:18;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-text-fill:#0D47A1;"
+        );
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("dd MMM yyyy    hh:mm:ss a");
+
+        Timeline clock = new Timeline(
+                new KeyFrame(Duration.seconds(1), e -> {
+                    clockLabel.setText(LocalDateTime.now().format(formatter));
+                })
+        );
+
+        clock.setCycleCount(Timeline.INDEFINITE);
+        clock.play();
+
         // Dashboard Cards
         MedicineService service = new MedicineService();
 
@@ -63,7 +89,7 @@ public class Dashboard {
         );
 
         Label supplierCount = new Label(
-                "📦 Suppliers\nComing Soon"
+                "📦 Suppliers"
         );
 
         Label expiryCount = new Label(
@@ -138,8 +164,9 @@ public class Dashboard {
         // Actions
         medicineBtn.setOnAction(e -> new ViewMedicineScreen().show());
 
-        supplierBtn.setOnAction(e ->
-                System.out.println("Supplier Module Coming Soon"));
+        supplierBtn.setOnAction(e -> {
+            new ViewSupplierScreen().show();
+        });
 
         billingBtn.setOnAction(e ->
                 System.out.println("Billing Module Coming Soon"));
@@ -148,12 +175,28 @@ public class Dashboard {
                 System.out.println("Reports Module Coming Soon"));
 
         logoutBtn.setOnAction(e -> {
-            stage.close();
-            new LoginScreen().start(new Stage());
-        });
 
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+
+            confirm.setTitle("Logout");
+            confirm.setHeaderText(null);
+            confirm.setContentText("Are you sure you want to logout?");
+
+            if (confirm.showAndWait().get() == ButtonType.OK) {
+
+                stage.close();
+                new LoginScreen().start(new Stage());
+
+            }
+
+        });
         // Root Layout
         VBox root = new VBox(25);
+        Label footer = new Label("© 2026 MediTrack Pharmacy Management System");
+        footer.setStyle(
+                "-fx-font-size:12px;" +
+                        "-fx-text-fill:gray;"
+        );
         root.setAlignment(Pos.CENTER);
         root.
                 setPadding(new Insets(30));
@@ -165,6 +208,34 @@ public class Dashboard {
                         Insets.EMPTY
                 )
         ));
+        Button aboutBtn = new Button("ℹ About");
+        aboutBtn.setStyle(
+                "-fx-background-color:#00897B;" +
+                        "-fx-text-fill:white;" +
+                        "-fx-font-size:16px;" +
+                        "-fx-font-weight:bold;" +
+                        "-fx-background-radius:12;"
+        );
+        aboutBtn.setOnAction(e -> {
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+            alert.setTitle("About MediTrack");
+            alert.setHeaderText("MediTrack Pharmacy Management System");
+
+            alert.setContentText(
+                    "Version : 1.0\n\n" +
+                            "Developed Using:\n\n" +
+                            "• Java\n" +
+                            "• JavaFX\n" +
+                            "• PostgreSQL\n" +
+                            "• JDBC\n\n" +
+                            "Mini Project 2026"
+            );
+
+            alert.showAndWait();
+
+        });
 
         root.getChildren().addAll(
 
@@ -173,6 +244,7 @@ public class Dashboard {
                 welcome,
                 title,
                 subtitle,
+                clockLabel,
 
                 row1,
                 row2,
@@ -180,7 +252,8 @@ public class Dashboard {
                 medicineBtn,
                 supplierBtn,
                 billingBtn,
-                reportsBtn
+                reportsBtn,
+                footer
         );
         Scene scene = new Scene(root, 900, 650);
 
